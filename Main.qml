@@ -35,7 +35,35 @@ Window {
         }
     }
 
+    function handle_input(text) {
+        if ("" === text)
+            return;
+        var current_txt = num_solve.isResult ? "0" : display_text.text;
+        if (text !== "=") {
+            num_solve.isResult = false;
+            display_text.text = JStool.text_input(current_txt, text);
+        }
+        else if (!num_solve.isResult) {
+            display_text.text = num_solve.num_calculate(display_text.text);
+            num_solve.isResult = true;
+        }
+    }
+
     Rectangle {
+        focus: true
+        Keys.onPressed: function(event) {
+            let mapping_key = "";
+            if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
+                mapping_key = (event.key - Qt.Key_0).toString();
+            }
+            else
+            {
+                mapping_key = num_solve.get_mapping_str(event.key);
+            }
+
+            handle_input(mapping_key);
+        }
+
         id: keys
         height: win.height - display.height
         width: parent.width
@@ -55,18 +83,9 @@ Window {
                     font.pointSize: 13
                     height: keys.height / 5
                     width: keys.width / 4
-                    required property string modelData
                     text: modelData
                     onClicked: {
-                        var current_txt = num_solve.isResult ? "0" : display_text.text;
-                        num_solve.isResult = false;
-                        if (text !== "=") {
-                            display_text.text = JStool.text_input(current_txt, text);
-                        }
-                        else {
-                            display_text.text = num_solve.num_calculate(display_text.text);
-                            num_solve.isResult = true;
-                        }
+                        handle_input(text)
                     }
                 }
             }

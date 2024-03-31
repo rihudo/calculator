@@ -221,12 +221,14 @@ public:
     void setIsResult(bool);
 
     Q_INVOKABLE QString num_calculate(const QString& str);
+    Q_INVOKABLE QString get_mapping_str(int);
 
 signals:
     void isResultChanged();
 
 private:
     bool m_isResult;
+    std::unordered_map<int, QString> keys_map;
 };
 
 #endif // SOLVE_H
